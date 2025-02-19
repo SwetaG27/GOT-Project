@@ -4,10 +4,10 @@ const Sectionbar = ({ personData, onClick, isActive, isDisabled }) => {
       className={`border-[#4075d5] bg-[#4075d5] px-3 py-1 font-bold rounded text-white cursor-pointer 
               ${
                 isActive
-                  ? "bg-white text-blue-700 border border-[#4075d5]"
+                  ? "bg-white !text-[#4075d5] border border-[#4075d5]"
                   : "hover:bg-white hover:text-[#4075d5] hover:border hover:border-[#4075d5]"
               }`}
-      onClick={!isDisabled ? onClick : null} 
+      onClick={!isDisabled ? onClick : null}
     >
       {personData}
     </button>
