@@ -13,18 +13,18 @@ const App = () => {
     setSelectedHouse(selectedHouse === houseName ? null : houseName);
   };
 
-  const allPeople = houses.flatMap((house) =>
-    house.people.map((person) => ({
-      ...person,
-      houseName: house.name,
-    }))
-  );
+  const filteredHouses = houses.map((house) => ({
+    ...house,
+    people: house.people.filter((person) =>
+      person.name.toLowerCase().includes(searchValue.toLowerCase())
+    ),
+  }));
 
-  const filteredPeople = searchValue
-    ? allPeople.filter((person) =>
-        person.name.toLowerCase().includes(searchValue.toLowerCase())
-      )
-    : allPeople;
+  const displayedHouses = selectedHouse
+    ? filteredHouses.filter((house) => house.name === selectedHouse)
+    : filteredHouses;
+
+  const hasResults = displayedHouses.some((house) => house.people.length > 0);
 
   return (
     <div>
@@ -42,14 +42,18 @@ const App = () => {
       </div>
 
       <div className="flex flex-wrap gap-2 justify-center mt-3">
-        {filteredPeople.length > 0 ? (
-          filteredPeople.map((person) => (
-            <Sectioncards key={person.name} details={person} />
-          ))
+        {searchValue || selectedHouse ? (
+          hasResults ? (
+            displayedHouses.map((data) => (
+              <Sectioncards key={data.name} details={data} />
+            ))
+          ) : (
+            <p className="text-gray-600 text-2xl font-semibold">
+              No results found.
+            </p>
+          )
         ) : (
-          <p className="text-gray-600 text-2xl font-semibold">
-            No results found.
-          </p>
+          houses.map((data) => <Sectioncards key={data.name} details={data} />)
         )}
       </div>
     </div>
