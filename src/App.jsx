@@ -10,7 +10,9 @@ const App = () => {
   const [selectedHouse, setSelectedHouse] = useState(null);
 
   const handleHouseClick = (houseName) => {
-    setSelectedHouse(selectedHouse === houseName ? null : houseName);
+    if (!searchValue) {
+      setSelectedHouse(houseName === selectedHouse ? null : houseName);
+    }
   };
 
   const allPeople = houses.flatMap((house) =>
@@ -20,13 +22,11 @@ const App = () => {
     }))
   );
 
-  let filteredPeople = searchValue
-    ? allPeople.filter((person) =>
-        person.name.toLowerCase().includes(searchValue.toLowerCase())
-      )
-    : allPeople;
+  let filteredPeople = allPeople.filter((person) =>
+    person.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
-  if (selectedHouse) {
+  if (!searchValue && selectedHouse) {
     filteredPeople = filteredPeople.filter(
       (person) => person.houseName === selectedHouse
     );
@@ -34,7 +34,7 @@ const App = () => {
 
   return (
     <div>
-      <Header setSearchValue={setSearchValue} />
+      <Header setSearchValue={setSearchValue} searchValue={searchValue} />
 
       <div className="flex flex-wrap gap-2 justify-center mt-3">
         {houses.map((data) => (
@@ -43,6 +43,7 @@ const App = () => {
             personData={data.name}
             onClick={() => handleHouseClick(data.name)}
             isActive={selectedHouse === data.name}
+            isDisabled={!!searchValue}
           />
         ))}
       </div>
